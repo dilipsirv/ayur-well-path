@@ -1,11 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { SEO } from "@/components/SEO";
-import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const Admin = () => {
-  const connectNotice = () =>
-    toast("Connect Supabase to enable admin authentication and management.");
+  const navigate = useNavigate();
+  const connectNotice = () => navigate("/auth");
 
   return (
     <div className="container mx-auto px-6 py-10">

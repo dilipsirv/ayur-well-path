@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { SEO } from "@/components/SEO";
-import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 import { CalendarCheck, ClipboardList, Dumbbell, History, Salad, UserRound } from "lucide-react";
 
 const sections = [
@@ -14,8 +14,8 @@ const sections = [
 ];
 
 const Dashboard = () => {
-  const connectNotice = () =>
-    toast("Connect Supabase to enable authentication and data storage.");
+  const navigate = useNavigate();
+  const connectNotice = () => navigate("/auth");
 
   return (
     <div className="container mx-auto px-6 py-10">
