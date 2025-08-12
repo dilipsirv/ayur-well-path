@@ -16,17 +16,17 @@ const Auth = () => {
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      // Only synchronous state updates here; defer redirects
-      if (session?.user) {
+      // Only redirect on explicit sign-in to avoid loops from stale sessions
+      if (event === 'SIGNED_IN' && session?.user) {
         setTimeout(() => {
           window.location.href = "/dashboard";
         }, 0);
       }
     });
 
-    // Check existing session after setting up the listener
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
+    // Validate session with server before redirecting (avoids stale token loops)
+    supabase.auth.getUser().then(({ data, error }) => {
+      if (!error && data?.user) {
         window.location.href = "/dashboard";
       }
     });
