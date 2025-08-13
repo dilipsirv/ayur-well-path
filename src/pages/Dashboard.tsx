@@ -17,10 +17,19 @@ const Dashboard = () => {
   const { toast } = useToast();
 
   const handleSectionClick = (title: string) => {
-    toast({
-      title: "Coming Soon",
-      description: `${title} feature is under development and will be available soon!`,
-    });
+    const routes: Record<string, string> = {
+      "Your Profile": "/profile",
+      "Prakriti Analysis": "/prakriti-analysis", 
+      "Diet Chart": "/diet-chart",
+      "Daily Schedule": "/daily-schedule",
+      "Follow-ups": "/follow-ups",
+      "History": "/history"
+    };
+    
+    const path = routes[title];
+    if (path) {
+      window.location.href = path;
+    }
   };
 
   return (
