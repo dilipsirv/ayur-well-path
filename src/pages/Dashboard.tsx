@@ -1,42 +1,51 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { SEO } from "@/components/SEO";
-import { useNavigate } from "react-router-dom";
 import { CalendarCheck, ClipboardList, Dumbbell, History, Salad, UserRound } from "lucide-react";
+import { WelcomeCard } from "@/components/dashboard/WelcomeCard";
+import { DashboardSection } from "@/components/dashboard/DashboardSection";
+import { useToast } from "@/hooks/use-toast";
 
 const sections = [
-  { title: "Your Profile", desc: "Name, age, gender, contact, and health history.", icon: UserRound },
-  { title: "Prakriti Analysis", desc: "Answer a quick questionnaire to learn your type.", icon: ClipboardList },
-  { title: "Diet Chart", desc: "See recommendations tailored to your Prakriti.", icon: Salad },
-  { title: "Daily Schedule", desc: "A routine with wake-up, exercise, meditation, meals.", icon: Dumbbell },
-  { title: "Follow-ups", desc: "Set reminders and track progress over time.", icon: CalendarCheck },
-  { title: "History", desc: "View previous analyses and improvements.", icon: History },
+  { title: "Your Profile", desc: "Manage your personal information, health history, and preferences.", icon: UserRound },
+  { title: "Prakriti Analysis", desc: "Discover your Ayurvedic constitution through our detailed questionnaire.", icon: ClipboardList },
+  { title: "Diet Chart", desc: "Get personalized nutrition recommendations based on your Prakriti.", icon: Salad },
+  { title: "Daily Schedule", desc: "Follow a balanced routine for optimal health and wellness.", icon: Dumbbell },
+  { title: "Follow-ups", desc: "Track your progress and set health reminders.", icon: CalendarCheck },
+  { title: "History", desc: "Review your past analyses and health journey.", icon: History },
 ];
 
 const Dashboard = () => {
-  const navigate = useNavigate();
-  const connectNotice = () => navigate("/auth");
+  const { toast } = useToast();
+
+  const handleSectionClick = (title: string) => {
+    toast({
+      title: "Coming Soon",
+      description: `${title} feature is under development and will be available soon!`,
+    });
+  };
 
   return (
-    <div className="container mx-auto px-6 py-10">
-      <SEO title="Dashboard — AyurWell" description="Your Ayurveda dashboard: profile, Prakriti, diet, schedule, and follow-ups." canonical="/dashboard" />
-      <h1 className="section-title mb-8">Your Dashboard</h1>
+    <div className="container mx-auto px-6 py-8">
+      <SEO title="Dashboard — AyurWell" description="Your personalized Ayurveda dashboard with profile, Prakriti analysis, diet charts and more." canonical="/dashboard" />
+      
+      <div className="mb-8">
+        <WelcomeCard />
+      </div>
+
+      <div className="mb-6">
+        <h1 className="section-title">Your Wellness Hub</h1>
+        <p className="text-muted-foreground mt-2">Explore your personalized Ayurveda features below</p>
+      </div>
+
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {sections.map(({ title, desc, icon: Icon }) => (
-          <Card key={title} className="group">
-            <CardHeader>
-              <div className="flex items-center gap-3">
-                <span className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-secondary">
-                  <Icon className="text-primary" />
-                </span>
-                <CardTitle>{title}</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground mb-4">{desc}</p>
-              <Button variant="hero" onClick={connectNotice}>Sign in to continue</Button>
-            </CardContent>
-          </Card>
+        {sections.map((section) => (
+          <DashboardSection 
+            key={section.title}
+            title={section.title}
+            description={section.desc}
+            icon={section.icon}
+            onClick={() => handleSectionClick(section.title)}
+            buttonText="Explore"
+          />
         ))}
       </div>
     </div>
