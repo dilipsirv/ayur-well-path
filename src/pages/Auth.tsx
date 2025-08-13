@@ -24,13 +24,6 @@ const Auth = () => {
       }
     });
 
-    // Validate session with server before redirecting (avoids stale token loops)
-    supabase.auth.getUser().then(({ data, error }) => {
-      if (!error && data?.user) {
-        window.location.href = "/dashboard";
-      }
-    });
-
     return () => {
       subscription.unsubscribe();
     };
