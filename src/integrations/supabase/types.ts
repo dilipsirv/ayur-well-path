@@ -7,14 +7,173 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "13.0.4"
   }
   public: {
     Tables: {
-      [_ in never]: never
+      daily_schedules: {
+        Row: {
+          created_at: string | null
+          exercise: string | null
+          id: string
+          meals: string | null
+          meditation: string | null
+          prakriti_type: string | null
+          sleep_time: string | null
+          wake_up_time: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          exercise?: string | null
+          id?: string
+          meals?: string | null
+          meditation?: string | null
+          prakriti_type?: string | null
+          sleep_time?: string | null
+          wake_up_time?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          exercise?: string | null
+          id?: string
+          meals?: string | null
+          meditation?: string | null
+          prakriti_type?: string | null
+          sleep_time?: string | null
+          wake_up_time?: string | null
+        }
+        Relationships: []
+      }
+      diet_charts: {
+        Row: {
+          breakfast: string | null
+          created_at: string | null
+          dinner: string | null
+          id: string
+          lunch: string | null
+          prakriti_type: string | null
+          snacks: string | null
+        }
+        Insert: {
+          breakfast?: string | null
+          created_at?: string | null
+          dinner?: string | null
+          id?: string
+          lunch?: string | null
+          prakriti_type?: string | null
+          snacks?: string | null
+        }
+        Update: {
+          breakfast?: string | null
+          created_at?: string | null
+          dinner?: string | null
+          id?: string
+          lunch?: string | null
+          prakriti_type?: string | null
+          snacks?: string | null
+        }
+        Relationships: []
+      }
+      follow_ups: {
+        Row: {
+          created_at: string | null
+          feedback: string | null
+          id: string
+          progress_notes: string | null
+          reminder_date: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          feedback?: string | null
+          id?: string
+          progress_notes?: string | null
+          reminder_date?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          feedback?: string | null
+          id?: string
+          progress_notes?: string | null
+          reminder_date?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "follow_ups_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prakriti_results: {
+        Row: {
+          created_at: string | null
+          id: string
+          prakriti_type: string | null
+          score: Json | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          prakriti_type?: string | null
+          score?: Json | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          prakriti_type?: string | null
+          score?: Json | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prakriti_results_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      users: {
+        Row: {
+          age: number | null
+          created_at: string | null
+          email: string
+          gender: string | null
+          health_history: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          age?: number | null
+          created_at?: string | null
+          email: string
+          gender?: string | null
+          health_history?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          age?: number | null
+          created_at?: string | null
+          email?: string
+          gender?: string | null
+          health_history?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

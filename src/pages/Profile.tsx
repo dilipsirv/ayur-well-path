@@ -35,7 +35,7 @@ const Profile = () => {
     if (!user) return;
     
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('users')
         .select('*')
         .eq('id', user.id)
@@ -70,7 +70,7 @@ const Profile = () => {
     
     setSaving(true);
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('users')
         .upsert({
           id: user.id,

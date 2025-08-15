@@ -56,7 +56,7 @@ const DietChart = () => {
     if (!user) return;
     
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('prakriti_results')
         .select('prakriti_type')
         .eq('user_id', user.id)

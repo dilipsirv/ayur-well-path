@@ -65,7 +65,7 @@ const DailySchedule = () => {
     if (!user) return;
     
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('prakriti_results')
         .select('prakriti_type')
         .eq('user_id', user.id)
@@ -187,7 +187,7 @@ const DailySchedule = () => {
                   </div>
                   <div className="flex justify-between items-center py-2 border-b border-border/50">
                     <span className="text-sm font-medium">Rest</span>
-                    <Badge variant="outline">{schedule?.rest || "1:30 PM - 2:00 PM"}</Badge>
+                    <Badge variant="outline">1:30 PM - 2:00 PM</Badge>
                   </div>
                   <div className="flex justify-between items-center py-2">
                     <span className="text-sm font-medium">Afternoon Work</span>

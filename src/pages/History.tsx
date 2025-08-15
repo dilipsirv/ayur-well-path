@@ -39,7 +39,7 @@ const History = () => {
     
     try {
       // Fetch Prakriti results
-      const { data: prakritiData, error: prakritiError } = await supabase
+      const { data: prakritiData, error: prakritiError } = await (supabase as any)
         .from('prakriti_results')
         .select('*')
         .eq('user_id', user.id)
@@ -49,7 +49,7 @@ const History = () => {
       setPrakritiResults(prakritiData || []);
 
       // Fetch recent follow-ups
-      const { data: followUpData, error: followUpError } = await supabase
+      const { data: followUpData, error: followUpError } = await (supabase as any)
         .from('follow_ups')
         .select('*')
         .eq('user_id', user.id)

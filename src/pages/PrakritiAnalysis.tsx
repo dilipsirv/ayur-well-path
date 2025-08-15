@@ -76,7 +76,7 @@ const PrakritiAnalysis = () => {
     if (!user) return;
     
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('prakriti_results')
         .select('*')
         .eq('user_id', user.id)
@@ -127,7 +127,7 @@ const PrakritiAnalysis = () => {
     const prakritiType = dominant.charAt(0).toUpperCase() + dominant.slice(1);
     
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('prakriti_results')
         .insert({
           user_id: user?.id,

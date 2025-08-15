@@ -41,7 +41,7 @@ const FollowUps = () => {
     if (!user) return;
     
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('follow_ups')
         .select('*')
         .eq('user_id', user.id)
@@ -67,7 +67,7 @@ const FollowUps = () => {
     
     setSaving(true);
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('follow_ups')
         .insert({
           user_id: user.id,
@@ -100,7 +100,7 @@ const FollowUps = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('follow_ups')
         .delete()
         .eq('id', id);
