@@ -16,6 +16,7 @@ import FollowUps from "./pages/FollowUps";
 import History from "./pages/History";
 import Navbar from "./components/layout/Navbar";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { AdminRoute } from "./components/AdminRoute";
 
 const queryClient = new QueryClient();
 
@@ -37,7 +38,7 @@ const App = () => (
               <Route path="/daily-schedule" element={<ProtectedRoute><DailySchedule /></ProtectedRoute>} />
               <Route path="/follow-ups" element={<ProtectedRoute><FollowUps /></ProtectedRoute>} />
               <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
-              <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+              <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
               <Route path="/auth" element={<Auth />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
