@@ -87,7 +87,9 @@ export const AIContentGenerator = () => {
       console.error('Error generating content:', error);
       toast({
         title: "Error",
-        description: "Failed to generate content. Please try again.",
+        description: error.message?.includes('quota') ? 
+          "OpenAI API quota exceeded. Please check your API key and billing." :
+          "Failed to generate content. Please try again.",
         variant: "destructive",
       });
     } finally {

@@ -78,9 +78,18 @@ export const VoiceAssistant = ({ onResponse }: VoiceAssistantProps) => {
 
   const processAudioInput = async (audioBlob: Blob) => {
     try {
-      // Convert to base64
-      const arrayBuffer = await audioBlob.arrayBuffer();
-      const base64Audio = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
+      // Convert to base64 using FileReader to avoid stack overflow
+      const base64Audio = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const result = reader.result as string;
+          // Remove data:audio/webm;base64, prefix
+          const base64 = result.split(',')[1];
+          resolve(base64);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(audioBlob);
+      });
 
       // Send to speech-to-text
       const { data: transcriptionData, error: transcriptionError } = await supabase.functions.invoke('voice-to-text', {
@@ -131,7 +140,9 @@ export const VoiceAssistant = ({ onResponse }: VoiceAssistantProps) => {
       console.error('Error processing audio:', error);
       toast({
         title: "Error",
-        description: "Failed to process your voice input",
+        description: error.message?.includes('quota') ? 
+          "OpenAI API quota exceeded. Please check your API key and billing." :
+          "Failed to process your voice input. Please try again.",
         variant: "destructive",
       });
     } finally {
