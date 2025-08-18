@@ -14,6 +14,7 @@ import DietChart from "./pages/DietChart";
 import DailySchedule from "./pages/DailySchedule";
 import FollowUps from "./pages/FollowUps";
 import History from "./pages/History";
+import AIAssistant from "./pages/AIAssistant";
 import Navbar from "./components/layout/Navbar";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { AdminRoute } from "./components/AdminRoute";
@@ -38,6 +39,7 @@ const App = () => (
               <Route path="/daily-schedule" element={<ProtectedRoute><DailySchedule /></ProtectedRoute>} />
               <Route path="/follow-ups" element={<ProtectedRoute><FollowUps /></ProtectedRoute>} />
               <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
+              <Route path="/ai-assistant" element={<ProtectedRoute><AIAssistant /></ProtectedRoute>} />
               <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
               <Route path="/auth" element={<Auth />} />
               <Route path="*" element={<NotFound />} />

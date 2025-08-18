@@ -1,5 +1,5 @@
 import { SEO } from "@/components/SEO";
-import { CalendarCheck, ClipboardList, Dumbbell, History, Salad, UserRound } from "lucide-react";
+import { CalendarCheck, ClipboardList, Dumbbell, History, Salad, UserRound, Mic } from "lucide-react";
 import { WelcomeCard } from "@/components/dashboard/WelcomeCard";
 import { DashboardSection } from "@/components/dashboard/DashboardSection";
 import { useToast } from "@/hooks/use-toast";
@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 const sections = [
   { title: "Your Profile", desc: "Manage your personal information, health history, and preferences.", icon: UserRound },
   { title: "Prakriti Analysis", desc: "Discover your Ayurvedic constitution through our detailed questionnaire.", icon: ClipboardList },
+  { title: "AI Assistant", desc: "Voice wellness guidance and personalized content generation powered by AI.", icon: Mic },
   { title: "Diet Chart", desc: "Get personalized nutrition recommendations based on your Prakriti.", icon: Salad },
   { title: "Daily Schedule", desc: "Follow a balanced routine for optimal health and wellness.", icon: Dumbbell },
   { title: "Follow-ups", desc: "Track your progress and set health reminders.", icon: CalendarCheck },
@@ -20,6 +21,7 @@ const Dashboard = () => {
     const routes: Record<string, string> = {
       "Your Profile": "/profile",
       "Prakriti Analysis": "/prakriti-analysis", 
+      "AI Assistant": "/ai-assistant",
       "Diet Chart": "/diet-chart",
       "Daily Schedule": "/daily-schedule",
       "Follow-ups": "/follow-ups",
