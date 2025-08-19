@@ -44,13 +44,12 @@ Provide helpful Ayurvedic wellness guidance based on the user's question.`;
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'gpt-4.1-2025-04-14',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: message }
         ],
-        max_tokens: 1000,
-        temperature: 0.7,
+        max_completion_tokens: 1000,
       }),
     });
 
