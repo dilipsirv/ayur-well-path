@@ -6,36 +6,6 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-// Process base64 in chunks to prevent memory issues
-function processBase64Chunks(base64String: string, chunkSize = 32768) {
-  const chunks: Uint8Array[] = [];
-  let position = 0;
-  
-  while (position < base64String.length) {
-    const chunk = base64String.slice(position, position + chunkSize);
-    const binaryChunk = atob(chunk);
-    const bytes = new Uint8Array(binaryChunk.length);
-    
-    for (let i = 0; i < binaryChunk.length; i++) {
-      bytes[i] = binaryChunk.charCodeAt(i);
-    }
-    
-    chunks.push(bytes);
-    position += chunkSize;
-  }
-
-  const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
-  const result = new Uint8Array(totalLength);
-  let offset = 0;
-
-  for (const chunk of chunks) {
-    result.set(chunk, offset);
-    offset += chunk.length;
-  }
-
-  return result;
-}
-
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
@@ -50,35 +20,49 @@ serve(async (req) => {
 
     console.log('Processing audio transcription request')
 
-    // Process audio in chunks
-    const binaryAudio = processBase64Chunks(audio)
+    // Convert base64 to binary
+    const binaryAudio = Uint8Array.from(atob(audio), c => c.charCodeAt(0))
     
-    // Prepare form data
-    const formData = new FormData()
-    const blob = new Blob([binaryAudio], { type: 'audio/webm' })
-    formData.append('file', blob, 'audio.webm')
-    formData.append('model', 'whisper-1')
+    // Convert to base64 for Google API
+    const base64Audio = btoa(String.fromCharCode(...binaryAudio))
 
-    // Send to OpenAI
-    const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+    // Send to Google Speech-to-Text API
+    const response = await fetch(`https://speech.googleapis.com/v1/speech:recognize?key=${Deno.env.get('GOOGLE_API_KEY')}`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${Deno.env.get('OPENAI_API_KEY')}`,
+        'Content-Type': 'application/json',
       },
-      body: formData,
+      body: JSON.stringify({
+        config: {
+          encoding: 'WEBM_OPUS',
+          sampleRateHertz: 48000,
+          languageCode: 'en-US',
+          model: 'latest_long',
+          useEnhanced: true,
+        },
+        audio: {
+          content: base64Audio
+        }
+      }),
     })
 
     if (!response.ok) {
       const errorText = await response.text()
-      console.error('OpenAI API error:', errorText)
-      throw new Error(`OpenAI API error: ${errorText}`)
+      console.error('Google Speech API error:', errorText)
+      throw new Error(`Google Speech API error: ${errorText}`)
     }
 
     const result = await response.json()
-    console.log('Transcription successful:', result.text)
+    
+    if (!result.results || result.results.length === 0) {
+      throw new Error('No transcription results returned')
+    }
+
+    const transcript = result.results[0]?.alternatives[0]?.transcript || ''
+    console.log('Transcription successful:', transcript)
 
     return new Response(
-      JSON.stringify({ text: result.text }),
+      JSON.stringify({ text: transcript }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
 

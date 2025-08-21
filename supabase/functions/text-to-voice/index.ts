@@ -20,37 +20,50 @@ serve(async (req) => {
 
     console.log('Generating speech for text:', text.substring(0, 100))
 
-    // Generate speech from text
-    const response = await fetch('https://api.openai.com/v1/audio/speech', {
+    // Map voice names to Google TTS voices
+    const voiceMap = {
+      'alloy': 'en-US-Journey-F',
+      'echo': 'en-US-Casual-K',
+      'fable': 'en-US-Journey-D',
+      'onyx': 'en-US-Journey-O',
+      'nova': 'en-US-Journey-F',
+      'shimmer': 'en-US-Journey-F'
+    }
+
+    const googleVoice = voiceMap[voice] || 'en-US-Journey-F'
+
+    // Generate speech using Google Text-to-Speech API
+    const response = await fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${Deno.env.get('GOOGLE_API_KEY')}`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${Deno.env.get('OPENAI_API_KEY')}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'tts-1',
-        input: text,
-        voice: voice || 'alloy',
-        response_format: 'mp3',
+        input: { text },
+        voice: {
+          languageCode: 'en-US',
+          name: googleVoice,
+          ssmlGender: 'FEMALE'
+        },
+        audioConfig: {
+          audioEncoding: 'MP3',
+          speakingRate: 1.0,
+          pitch: 0.0
+        }
       }),
     })
 
     if (!response.ok) {
-      const error = await response.json()
-      console.error('OpenAI TTS error:', error)
-      throw new Error(error.error?.message || 'Failed to generate speech')
+      const error = await response.text()
+      console.error('Google TTS error:', error)
+      throw new Error('Failed to generate speech')
     }
 
-    // Convert audio buffer to base64
-    const arrayBuffer = await response.arrayBuffer()
-    const base64Audio = btoa(
-      String.fromCharCode(...new Uint8Array(arrayBuffer))
-    )
-
+    const result = await response.json()
     console.log('Speech generation successful')
 
     return new Response(
-      JSON.stringify({ audioContent: base64Audio }),
+      JSON.stringify({ audioContent: result.audioContent }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       },
